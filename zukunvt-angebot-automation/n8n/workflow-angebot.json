@@ -1,0 +1,237 @@
+{
+  "name": "Angebot Auto-Generator",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "angebot-trigger",
+        "responseMode": "lastNode",
+        "options": {}
+      },
+      "id": "trigger-node",
+      "name": "Webhook Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [250, 300],
+      "webhookId": "angebot-trigger"
+    },
+    {
+      "parameters": {
+        "resource": "task",
+        "operation": "get",
+        "taskId": "={{ $json.body.task_id }}",
+        "additionalFields": {}
+      },
+      "id": "clickup-get-task",
+      "name": "Get ClickUp Task",
+      "type": "n8n-nodes-base.clickUp",
+      "typeVersion": 1,
+      "position": [470, 300],
+      "credentials": {
+        "clickUpApi": {
+          "id": "CLICKUP_CREDENTIAL_ID",
+          "name": "ClickUp API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "// Extract custom fields from ClickUp task\nconst task = $input.first().json;\nconst customFields = task.custom_fields || [];\n\nfunction getField(name) {\n  const field = customFields.find(f => f.name === name);\n  return field ? field.value : null;\n}\n\nfunction getLabelsField(name) {\n  const field = customFields.find(f => f.name === name);\n  if (!field || !field.value) return [];\n  if (Array.isArray(field.value)) {\n    return field.value.map(v => typeof v === 'string' ? v : v.label || v.name || '');\n  }\n  return [];\n}\n\nconst taskData = {\n  taskId: task.id,\n  taskName: task.name,\n  kundenName: getField('Kundenname') || task.name,\n  ansprechpartner: getField('Ansprechpartner') || '',\n  email: getField('E-Mail') || '',\n  services: getLabelsField('Services'),\n  branche: getField('Branche') || 'Other',\n  projektBeschreibung: getField('Projektbeschreibung') || '',\n  budget: getField('Budget') || '10-20k',\n  timeline: getField('Timeline') || '3-6 Monate',\n  sprache: getField('Sprache') || 'DE',\n  bestehenderKunde: getField('Bestandskunde') === true,\n  notizen: getField('Notizen') || ''\n};\n\n// Validate required fields\nconst required = ['kundenName', 'ansprechpartner', 'email', 'projektBeschreibung'];\nconst missing = required.filter(f => !taskData[f]);\n\nif (taskData.services.length === 0) missing.push('services');\n\nreturn [{\n  json: {\n    taskData,\n    isValid: missing.length === 0,\n    missingFields: missing\n  }\n}];"
+      },
+      "id": "parse-fields",
+      "name": "Parse Custom Fields",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 1,
+      "position": [690, 300]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{ $json.isValid }}",
+              "value2": true
+            }
+          ]
+        }
+      },
+      "id": "validation-check",
+      "name": "Valid Data?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [910, 300]
+    },
+    {
+      "parameters": {
+        "resource": "task",
+        "operation": "update",
+        "taskId": "={{ $('Parse Custom Fields').item.json.taskData.taskId }}",
+        "updateFields": {
+          "status": "needs input"
+        }
+      },
+      "id": "set-needs-input",
+      "name": "Set Status: NEEDS INPUT",
+      "type": "n8n-nodes-base.clickUp",
+      "typeVersion": 1,
+      "position": [1130, 500],
+      "credentials": {
+        "clickUpApi": {
+          "id": "CLICKUP_CREDENTIAL_ID",
+          "name": "ClickUp API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "claude-sonnet-4-20250514",
+        "messages": {
+          "values": [
+            {
+              "role": "user",
+              "content": "={{ JSON.stringify($json.taskData) }}"
+            }
+          ]
+        },
+        "options": {
+          "systemMessage": "Du bist der Angebots-Generator der zukunvt Agentur — eine internationale Markenberatung mit Sitz in Südtirol und Wien (10+ Jahre Erfahrung).\n\nKERNPHILOSOPHIE: \"Strategie, Marke und Marketing müssen als Einheit zusammenwirken.\"\n\nSPRACHE & TON:\n- Professionell aber warm und persönlich\n- Kollaborativ: \"zusammen\", \"gemeinsam\", \"co-creation\", \"mit Ihnen\"\n- Kunden = \"Partner\" (NIEMALS \"Kunden\" oder \"Clients\")\n\nAntworte im JSON-Format mit den Schlüsseln: coverLetter, calculationDescriptions, inclusions, exclusions, references",
+          "maxTokens": 4096
+        }
+      },
+      "id": "claude-generate",
+      "name": "Generate Proposal (Claude)",
+      "type": "@n8n/n8n-nodes-langchain.lmChatAnthropic",
+      "typeVersion": 1,
+      "position": [1130, 200],
+      "credentials": {
+        "anthropicApi": {
+          "id": "ANTHROPIC_CREDENTIAL_ID",
+          "name": "Anthropic API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "// Assemble the proposal document content\nconst taskData = $('Parse Custom Fields').item.json.taskData;\nconst aiResponse = JSON.parse($input.first().json.message.content);\n\nconst docTitle = `Angebot_${taskData.kundenName.replace(/\\s+/g, '_')}_${new Date().toISOString().split('T')[0]}`;\n\n// Build document body\nlet body = '';\n\n// Page 1: Cover Letter\nbody += aiResponse.coverLetter.greeting + '\\n\\n';\nbody += aiResponse.coverLetter.body + '\\n\\n';\nbody += aiResponse.coverLetter.closing + '\\n\\n';\nbody += '---\\n\\n';\n\n// Page 2: Legal Notice\nbody += 'Rechtlicher Hinweis\\n\\n';\nbody += 'Dieses Angebot ist 6 Wochen ab Erhalt gültig.\\n';\nbody += 'Es gelten die AGB der zukunvt GmbH.\\n\\n';\nbody += '---\\n\\n';\n\n// Page 3: Calculation\nbody += 'Kalkulation\\n\\n';\nif (aiResponse.calculationDescriptions) {\n  aiResponse.calculationDescriptions.forEach((phase, i) => {\n    body += `${i + 1}. ${phase.phaseTitle}\\n`;\n    body += `Fokuspunkte: ${phase.fokuspunkte.join(', ')}\\n`;\n    body += `Inhalt: ${phase.inhalt.join(', ')}\\n`;\n    body += `Phasenziel: ${phase.phasenziel}\\n`;\n    body += `Output: ${phase.output.join(', ')}\\n\\n`;\n  });\n}\nbody += '---\\n\\n';\n\n// Page 4: Summary\nbody += 'Zusammenfassung & Konditionen\\n\\n';\nbody += `Inkludiert: ${aiResponse.inclusions.join(', ')}\\n`;\nbody += `Exkludiert: ${aiResponse.exclusions.join(', ')}\\n\\n';\nbody += '---\\n\\n';\n\n// Page 5: References\nbody += 'Partner-Referenzen\\n\\n';\nif (aiResponse.references) {\n  aiResponse.references.forEach(ref => {\n    body += `${ref.partnerName} — ${ref.industry}\\n`;\n    body += `${ref.description}\\n\\n`;\n  });\n}\nbody += '\\npartner.zukunvt.it';\n\nreturn [{\n  json: {\n    docTitle,\n    docBody: body,\n    taskId: taskData.taskId\n  }\n}];"
+      },
+      "id": "assemble-doc",
+      "name": "Assemble Document",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 1,
+      "position": [1350, 200]
+    },
+    {
+      "parameters": {
+        "operation": "create",
+        "title": "={{ $json.docTitle }}",
+        "content": "={{ $json.docBody }}",
+        "folderId": "1mQIUjrFqZx7X0Y3j5eRz_jbUisp20bt2"
+      },
+      "id": "create-gdoc",
+      "name": "Create Google Doc",
+      "type": "n8n-nodes-base.googleDocs",
+      "typeVersion": 1,
+      "position": [1570, 200],
+      "credentials": {
+        "googleDocsOAuth2Api": {
+          "id": "GOOGLE_CREDENTIAL_ID",
+          "name": "Google Docs"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "task",
+        "operation": "update",
+        "taskId": "={{ $('Assemble Document').item.json.taskId }}",
+        "updateFields": {
+          "status": "to review (intern)"
+        }
+      },
+      "id": "update-clickup-status",
+      "name": "Update ClickUp Status",
+      "type": "n8n-nodes-base.clickUp",
+      "typeVersion": 1,
+      "position": [1790, 200],
+      "credentials": {
+        "clickUpApi": {
+          "id": "CLICKUP_CREDENTIAL_ID",
+          "name": "ClickUp API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "comment",
+        "operation": "create",
+        "taskId": "={{ $('Assemble Document').item.json.taskId }}",
+        "commentText": "=Angebot automatisch erstellt: {{ $('Create Google Doc').item.json.webViewLink }}"
+      },
+      "id": "add-comment",
+      "name": "Add ClickUp Comment",
+      "type": "n8n-nodes-base.clickUp",
+      "typeVersion": 1,
+      "position": [2010, 200],
+      "credentials": {
+        "clickUpApi": {
+          "id": "CLICKUP_CREDENTIAL_ID",
+          "name": "ClickUp API"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Webhook Trigger": {
+      "main": [
+        [{ "node": "Get ClickUp Task", "type": "main", "index": 0 }]
+      ]
+    },
+    "Get ClickUp Task": {
+      "main": [
+        [{ "node": "Parse Custom Fields", "type": "main", "index": 0 }]
+      ]
+    },
+    "Parse Custom Fields": {
+      "main": [
+        [{ "node": "Valid Data?", "type": "main", "index": 0 }]
+      ]
+    },
+    "Valid Data?": {
+      "main": [
+        [{ "node": "Generate Proposal (Claude)", "type": "main", "index": 0 }],
+        [{ "node": "Set Status: NEEDS INPUT", "type": "main", "index": 0 }]
+      ]
+    },
+    "Generate Proposal (Claude)": {
+      "main": [
+        [{ "node": "Assemble Document", "type": "main", "index": 0 }]
+      ]
+    },
+    "Assemble Document": {
+      "main": [
+        [{ "node": "Create Google Doc", "type": "main", "index": 0 }]
+      ]
+    },
+    "Create Google Doc": {
+      "main": [
+        [{ "node": "Update ClickUp Status", "type": "main", "index": 0 }]
+      ]
+    },
+    "Update ClickUp Status": {
+      "main": [
+        [{ "node": "Add ClickUp Comment", "type": "main", "index": 0 }]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "saveManualExecutions": true,
+    "callerPolicy": "workflowsFromSameOwner",
+    "errorWorkflow": ""
+  },
+  "tags": [
+    { "name": "angebot" },
+    { "name": "automation" },
+    { "name": "sales" }
+  ]
+}
