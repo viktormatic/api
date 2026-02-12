@@ -4,4 +4,5 @@ dist/
 credentials/
 *.log
 coverage/
+output/
 .DS_Store
