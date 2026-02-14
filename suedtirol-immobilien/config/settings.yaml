@@ -1,0 +1,118 @@
+# Südtirol Immobilien Investment Analyzer - Settings
+# API Keys and Search Parameters
+
+api_keys:
+  apify_token: "${APIFY_API_TOKEN}"
+  anthropic_key: "${ANTHROPIC_API_KEY}"
+
+search_config:
+  region: "trentino-alto-adige"
+  province: "bolzano"
+
+  # Target municipalities prioritized by investment potential
+  target_municipalities:
+    tier_1_urban:
+      - name: "bolzano"
+        name_de: "Bozen"
+        avg_price_sqm: 4939
+      - name: "merano"
+        name_de: "Meran"
+        avg_price_sqm: 4500
+    tier_2_suburban:
+      - name: "bressanone"
+        name_de: "Brixen"
+        avg_price_sqm: 4000
+      - name: "laives"
+        name_de: "Leifers"
+        avg_price_sqm: 3800
+      - name: "appiano-sulla-strada-del-vino"
+        name_de: "Eppan"
+        avg_price_sqm: 4000
+      - name: "lana"
+        name_de: "Lana"
+        avg_price_sqm: 3700
+      - name: "brunico"
+        name_de: "Bruneck"
+        avg_price_sqm: 3500
+    tier_3_value:
+      - name: "egna"
+        name_de: "Neumarkt"
+        avg_price_sqm: 3000
+      - name: "silandro"
+        name_de: "Schlanders"
+        avg_price_sqm: 2700
+      - name: "vipiteno"
+        name_de: "Sterzing"
+        avg_price_sqm: 3100
+      - name: "caldaro-sulla-strada-del-vino"
+        name_de: "Kaltern"
+        avg_price_sqm: 4200
+      - name: "renon"
+        name_de: "Ritten"
+        avg_price_sqm: 3500
+      - name: "tirolo"
+        name_de: "Dorf Tirol"
+        avg_price_sqm: 4000
+
+  # Search filters
+  filters:
+    operation: "vendita"
+    property_types:
+      - "appartamento"
+      - "villa"
+      - "casa-indipendente"
+      - "attico"
+    price_min: 100000
+    price_max: 800000
+    surface_min: 60
+    surface_max: 300
+    rooms_min: 2
+
+  # Investment thresholds
+  thresholds:
+    min_discount_to_market: 15    # Min 15% below market price
+    min_roi_target: 20            # Min 20% total ROI
+    max_renovation_budget: 150000
+    min_splitting_area: 80        # Min area for apartment splitting (m²)
+
+# Red flags - automatically exclude listings containing these
+red_flags:
+  keywords:
+    - "edilizia agevolata"
+    - "convenzionata"
+    - "diritto di superficie"
+    - "nuda proprietà"
+    - "nuda proprieta"
+    - "vendita giudiziaria"
+    - "terreno"
+    - "uso ufficio"
+    - "vincolo"
+    - "geförderter wohnbau"
+    - "preisbindung"
+    - "baurecht"
+
+# Scraping configuration
+scraping:
+  immobiliare:
+    base_url: "https://www.immobiliare.it"
+    search_path: "/vendita-case/{municipality}/"
+    detail_path: "/annunci/{listing_id}/"
+    rate_limit_seconds: 2.0
+    max_pages_per_municipality: 20
+    user_agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+
+  idealista:
+    base_url: "https://www.idealista.it"
+    search_path: "/vendita-case/{municipality}-provincia-bolzano/"
+    detail_path: "/immobile/{listing_id}/"
+    rate_limit_seconds: 3.0
+    max_pages_per_municipality: 15
+    # Use Apify for idealista due to aggressive anti-bot measures
+    use_apify: true
+    apify_actor: "igolaizola/idealista-scraper"
+
+  # Deduplication settings
+  deduplication:
+    gps_radius_meters: 50
+    area_tolerance_pct: 5
+    price_tolerance_pct: 10
