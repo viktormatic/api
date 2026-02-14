@@ -28,6 +28,7 @@ from scrapers.utils import (
 )
 from scrapers.immobiliare_scraper import ImmobiliareScraper
 from scrapers.idealista_scraper import IdealistaScraper
+from scrapers.facebook_scraper import FacebookMarketplaceScraper, FacebookGroupScraper
 from analysis.deal_scorer import rank_deals, score_deal
 from analysis.valuation import valuate_property
 from mcp_server.tools.report_generator import generate_deal_report, generate_summary_table
@@ -58,6 +59,13 @@ def scrape_municipality(municipality: str, portal: str = "both") -> list[Propert
             all_listings.extend(listings)
             logger.info(f"  Found {len(listings)} listings on idealista.it")
 
+    if portal in ("facebook", "all"):
+        logger.info(f"Scraping Facebook Marketplace for {municipality}...")
+        fb_scraper = FacebookMarketplaceScraper(config)
+        fb_listings = fb_scraper.scrape_via_apify(location=municipality)
+        all_listings.extend(fb_listings)
+        logger.info(f"  Found {len(fb_listings)} listings on Facebook Marketplace")
+
     return all_listings
 
 
@@ -77,6 +85,22 @@ def scrape_all_municipalities(portal: str = "both") -> list[PropertyListing]:
             if name:
                 listings = scrape_municipality(name, portal)
                 all_listings.extend(listings)
+
+    # Facebook covers all of South Tyrol at once
+    if portal in ("facebook", "all"):
+        logger.info(f"\n{'='*50}")
+        logger.info("Scraping Facebook Marketplace & Groups")
+        logger.info(f"{'='*50}")
+        fb_config = config
+        mp_scraper = FacebookMarketplaceScraper(fb_config)
+        mp_listings = mp_scraper.scrape_via_apify(location="all_suedtirol")
+        all_listings.extend(mp_listings)
+        logger.info(f"Facebook Marketplace: {len(mp_listings)} listings")
+
+        group_scraper = FacebookGroupScraper(fb_config)
+        group_listings = group_scraper.scrape_groups_via_apify()
+        all_listings.extend(group_listings)
+        logger.info(f"Facebook Groups: {len(group_listings)} listings")
 
     return all_listings
 
@@ -150,9 +174,9 @@ def main():
     )
     parser.add_argument(
         "--portal", "-p",
-        choices=["immobiliare", "idealista", "both"],
+        choices=["immobiliare", "idealista", "facebook", "both", "all"],
         default="both",
-        help="Which portal to scrape (default: both)",
+        help="Which portal to scrape (default: both). 'all' includes Facebook.",
     )
     parser.add_argument(
         "--analyze-stored",

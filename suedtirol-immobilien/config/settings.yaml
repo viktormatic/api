@@ -111,6 +111,34 @@ scraping:
     use_apify: true
     apify_actor: "igolaizola/idealista-scraper"
 
+  facebook:
+    # Facebook Marketplace & Groups scraping (via Apify)
+    marketplace:
+      enabled: true
+      locations:
+        - key: "all_suedtirol"
+          lat: 46.6
+          lng: 11.4
+          radius_km: 60
+      max_items: 100
+    groups:
+      enabled: true
+      # Known South Tyrol real estate Facebook groups
+      target_groups:
+        - name: "Immobilien Südtirol / Alto Adige"
+          language: "de"
+        - name: "Wohnungen & Häuser Südtirol"
+          language: "de"
+        - name: "Immobilien Bozen / Bolzano"
+          language: "de/it"
+        - name: "Wohnung mieten/kaufen Südtirol"
+          language: "de"
+        - name: "Immobiliare Alto Adige"
+          language: "it"
+        - name: "Case in vendita Alto Adige - Südtirol"
+          language: "it"
+      max_posts_per_group: 50
+
   # Deduplication settings
   deduplication:
     gps_radius_meters: 50

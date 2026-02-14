@@ -1,0 +1,320 @@
+{
+  "report_date": "2026-02-14T18:45:44.478888",
+  "listing": {
+    "property_id": "IMM-108321",
+    "source": "immobiliare",
+    "url": "https://www.immobiliare.it/annunci/108321/",
+    "title": "Grande appartamento St. Michael/Eppan",
+    "description": "Geräumige 4-Zimmer-Wohnung in St. Michael, Eppan. 120m², 1 Bad, Wohnküche, Loggia. Zu renovieren. Ruhige Lage im Überetsch mit Blick auf die Weinberge. Keller und Autostellplatz. Energieklasse F. Viel Potenzial für Wertsteigerung nach Sanierung.",
+    "price": 340000,
+    "price_per_sqm": 2833.33,
+    "price_history": [],
+    "surface_area": 120,
+    "rooms": 4,
+    "bathrooms": 1,
+    "floor": 1,
+    "total_floors": 3,
+    "elevator": null,
+    "balcony": null,
+    "terrace": null,
+    "garden": null,
+    "garage": true,
+    "cellar": true,
+    "energy_class": "F",
+    "heating_type": "centralizzato",
+    "year_built": 1978,
+    "condition": "da_ristrutturare",
+    "condition_de": "renovierungsbedürftig",
+    "latitude": 46.454,
+    "longitude": 11.259,
+    "address": "Bahnhofstraße 12, St. Michael/Eppan",
+    "municipality": "appiano-sulla-strada-del-vino",
+    "municipality_de": "Eppan",
+    "zone": "st_michael_st_pauls",
+    "province": "BZ",
+    "images": [],
+    "floor_plan_images": [],
+    "agency_name": "Immobiliare Überetsch",
+    "agency_phone": "+39 0471 890123",
+    "listing_date": "2025-10-05",
+    "last_updated": "",
+    "scrape_date": "2026-02-14T18:45:36.174550",
+    "property_type": "appartamento",
+    "raw_data": {}
+  },
+  "deal_analysis": {
+    "total_score": 61,
+    "deal_grade": "B",
+    "deal_label": "B-DEAL: Genauer prüfen",
+    "components": {
+      "price_discount": {
+        "score": 65,
+        "weight": 0.3
+      },
+      "location": {
+        "score": 77,
+        "weight": 0.25
+      },
+      "roi": {
+        "score": 25,
+        "weight": 0.25
+      },
+      "splitting": {
+        "score": 85,
+        "weight": 0.1
+      },
+      "liquidity": {
+        "score": 77,
+        "weight": 0.1
+      }
+    },
+    "recommendation": "Interessantes Objekt mit Potenzial. Discount: 19%, ROI: 8%. Detailprüfung und Preisverhandlung empfohlen.",
+    "action_items": [
+      "Besichtigung terminieren",
+      "Detaillierte Renovierungskosten-Schätzung erstellen",
+      "Vergleichsobjekte in der Umgebung analysieren",
+      "Preisverhandlung anstreben (Zielpreis: €312,800)",
+      "Teilungspotenzial prüfen: Mehrwert ca. €115,977"
+    ],
+    "risks": [
+      "Schlechte Energieklasse - zukünftige Auflagen möglich",
+      "Wohnungsteilung erfordert Baugenehmigung - Verzögerungen möglich"
+    ],
+    "valuation": {
+      "discount_to_market_pct": 19.0,
+      "roi_pct": 7.8,
+      "net_profit": 38234.84,
+      "arv_total": 570000.0,
+      "total_investment": 489734.0,
+      "location_score": 7.2,
+      "renovation_level": "mittel"
+    },
+    "splitting_analysis": {
+      "is_splittable": true,
+      "confidence": 0.85,
+      "n_units": 2,
+      "proposed_units": [
+        {
+          "unit": 1,
+          "area": 60.7,
+          "rooms": 2,
+          "has_bathroom": true,
+          "has_kitchen": true
+        },
+        {
+          "unit": 2,
+          "area": 49.7,
+          "rooms": 1,
+          "has_bathroom": true,
+          "has_kitchen": true
+        }
+      ],
+      "unit_areas": [
+        60.7,
+        49.7
+      ],
+      "checks": {
+        "min_area_met": true,
+        "separate_bathrooms": true,
+        "natural_light": true,
+        "separate_access": true,
+        "ventilation": true,
+        "min_height": true
+      },
+      "structural": {
+        "load_bearing_walls": false,
+        "plumbing": "Additional bathroom(s) required",
+        "windows": 6,
+        "window_distribution": "Sufficient for all units"
+      },
+      "economics": {
+        "value_before": 420000.0,
+        "value_after": 566352.0,
+        "splitting_cost": 30375.0,
+        "net_value_add": 115977.0
+      },
+      "splitting_score": 85
+    },
+    "renovation_plan": {
+      "level": "schwer",
+      "items": [
+        {
+          "name": "Complete electrical rewiring",
+          "name_de": "Elektrik komplett",
+          "description": "",
+          "quantity": 120,
+          "unit": "m²",
+          "cost_estimate": 13800.0,
+          "cost_range": [
+            9600,
+            18000
+          ]
+        },
+        {
+          "name": "Complete heating system",
+          "name_de": "Heizung komplett",
+          "description": "",
+          "quantity": 120,
+          "unit": "m²",
+          "cost_estimate": 10800.0,
+          "cost_range": [
+            7200,
+            14400
+          ]
+        },
+        {
+          "name": "Flooring",
+          "name_de": "Fußbodenbeläge",
+          "description": "",
+          "quantity": 120,
+          "unit": "m²",
+          "cost_estimate": 9600.0,
+          "cost_range": [
+            4800,
+            14400
+          ]
+        },
+        {
+          "name": "Painting & plastering",
+          "name_de": "Maler- und Verputzarbeiten",
+          "description": "",
+          "quantity": 120,
+          "unit": "m²",
+          "cost_estimate": 4500.0,
+          "cost_range": [
+            2700.0,
+            6300.0
+          ]
+        },
+        {
+          "name": "Bathroom - complete new",
+          "name_de": "Badezimmer komplett neu",
+          "description": "",
+          "quantity": 1,
+          "unit": "Stück",
+          "cost_estimate": 13000.0,
+          "cost_range": [
+            8000,
+            18000
+          ]
+        },
+        {
+          "name": "Window replacement",
+          "name_de": "Fenstertausch",
+          "description": "",
+          "quantity": 8,
+          "unit": "Stück",
+          "cost_estimate": 11200.0,
+          "cost_range": [
+            6400,
+            16000
+          ]
+        },
+        {
+          "name": "Interior doors",
+          "name_de": "Innentüren",
+          "description": "",
+          "quantity": 5,
+          "unit": "Stück",
+          "cost_estimate": 8250.0,
+          "cost_range": [
+            4000,
+            12500
+          ]
+        },
+        {
+          "name": "New bathroom(s)",
+          "name_de": "Neue(s) Badezimmer",
+          "description": "Add 1 new bathroom(s) with all installations",
+          "quantity": 1,
+          "unit": "Stück",
+          "cost_estimate": 13000.0,
+          "cost_range": [
+            8000,
+            18000
+          ]
+        },
+        {
+          "name": "Plumbing for new bathrooms",
+          "name_de": "Sanitärinstallation",
+          "description": "",
+          "quantity": 1,
+          "unit": "Stück",
+          "cost_estimate": 8500.0,
+          "cost_range": [
+            5000,
+            12000
+          ]
+        },
+        {
+          "name": "New kitchen",
+          "name_de": "Neue Küche",
+          "description": "",
+          "quantity": 1,
+          "unit": "Stück",
+          "cost_estimate": 15000.0,
+          "cost_range": [
+            5000,
+            25000
+          ]
+        },
+        {
+          "name": "Building permit for splitting",
+          "name_de": "Baugenehmigung Teilung",
+          "description": "",
+          "quantity": 1,
+          "unit": "Stück",
+          "cost_estimate": 5500.0,
+          "cost_range": [
+            3000,
+            8000
+          ]
+        },
+        {
+          "name": "Partition walls",
+          "name_de": "Trennwände",
+          "description": "New partition walls for 2 units",
+          "quantity": 15,
+          "unit": "m²",
+          "cost_estimate": 1725.0,
+          "cost_range": [
+            1200,
+            2250
+          ]
+        },
+        {
+          "name": "Entrance doors",
+          "name_de": "Eingangstüren",
+          "description": "",
+          "quantity": 1,
+          "unit": "Stück",
+          "cost_estimate": 2500.0,
+          "cost_range": [
+            1500,
+            3500
+          ]
+        },
+        {
+          "name": "Separate utility connections",
+          "name_de": "Separate Versorgungsanschlüsse",
+          "description": "Electricity, water, gas meters per unit",
+          "quantity": 1,
+          "unit": "Stück",
+          "cost_estimate": 3500.0,
+          "cost_range": [
+            2000,
+            5000
+          ]
+        }
+      ],
+      "subtotal": 120875.0,
+      "contingency_pct": 0.15,
+      "contingency": 18131.25,
+      "total_estimate": 139006.25,
+      "total_range": [
+        68400.0,
+        199352.5
+      ]
+    }
+  }
+}
