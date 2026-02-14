@@ -100,6 +100,9 @@ scraping:
     rate_limit_seconds: 2.0
     max_pages_per_municipality: 20
     user_agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+    # Use Apify for immobiliare.it - ultra-fast bulk scraper (~$0.01/1K listings)
+    use_apify: true
+    apify_actor: "azzouzana/immobiliare-it-listing-page-scraper-by-search-url"
 
   idealista:
     base_url: "https://www.idealista.it"

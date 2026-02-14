@@ -2,16 +2,20 @@
 Scraper for immobiliare.it - South Tyrol property listings.
 
 Scraping strategy:
-1. Build search URLs for each target municipality
-2. Extract listings from search result pages (ID, price, area, rooms, address, agency)
-3. Scrape detail pages (description, floor plan images, energy class, floor)
-4. Store structured data in JSON
+1. Primary: Apify Actor "azzouzana/immobiliare-it-listing-page-scraper-by-search-url"
+   - Ultra-fast bulk scraper with rich output (IDs, prices, GPS, photos, agency contacts)
+   - ~$0.01 per 1,000 listings, max 2,000 per search URL
+2. Fallback: Direct HTTP scraping with rate limiting
+   - Build search URLs for each target municipality
+   - Extract listings from search result pages
+   - Scrape detail pages for full data
 
-Alternative: Use Apify Actor "igolaizola/immobiliare-it-scraper" for managed scraping.
+Requires: APIFY_API_TOKEN environment variable for Apify mode.
 """
 
 import json
 import logging
+import os
 import re
 from pathlib import Path
 from typing import Optional
@@ -38,6 +42,7 @@ class ImmobiliareScraper:
     """Scraper for immobiliare.it property listings in South Tyrol."""
 
     BASE_URL = "https://www.immobiliare.it"
+    APIFY_ACTOR = "azzouzana/immobiliare-it-listing-page-scraper-by-search-url"
 
     def __init__(self, config: Optional[dict] = None):
         self.config = config or load_config()
@@ -46,6 +51,7 @@ class ImmobiliareScraper:
             min_delay=scraping_config.get("rate_limit_seconds", 2.0)
         )
         self.max_pages = scraping_config.get("max_pages_per_municipality", 20)
+        self.use_apify = scraping_config.get("use_apify", True)
         self.user_agent = scraping_config.get(
             "user_agent",
             "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
@@ -60,6 +66,142 @@ class ImmobiliareScraper:
             timeout=30.0,
         )
         self.filters = self.config.get("search_config", {}).get("filters", {})
+
+    def scrape_via_apify(self, municipality: str) -> list[PropertyListing]:
+        """
+        Use Apify Actor to scrape immobiliare.it listings.
+
+        Actor: azzouzana/immobiliare-it-listing-page-scraper-by-search-url
+        - Ultra-fast bulk scraper (~$0.01/1K listings)
+        - Rich output: IDs, prices, GPS, photos, energy, agency contacts
+        - Max 2,000 listings per search URL
+        - Requires APIFY_API_TOKEN environment variable
+        """
+        try:
+            from apify_client import ApifyClient
+        except ImportError:
+            logger.warning("apify-client not installed. Run: pip install apify-client")
+            return []
+
+        api_token = os.environ.get("APIFY_API_TOKEN", "")
+        if not api_token:
+            logger.warning("APIFY_API_TOKEN not set. Falling back to direct scraping.")
+            return []
+
+        client = ApifyClient(api_token)
+        it_name, de_name = normalize_municipality(municipality)
+
+        # Build search URL for the actor
+        search_url = self.build_search_url(it_name)
+        logger.info(f"Running Apify actor for immobiliare.it/{municipality}: {search_url}")
+
+        actor_input = {
+            "startUrl": search_url,
+        }
+
+        try:
+            run = client.actor(self.APIFY_ACTOR).call(
+                run_input=actor_input, timeout_secs=300
+            )
+            dataset_items = list(
+                client.dataset(run["defaultDatasetId"]).iterate_items()
+            )
+        except Exception as e:
+            logger.error(f"Apify actor failed for {municipality}: {e}")
+            return []
+
+        logger.info(f"Apify returned {len(dataset_items)} items for {municipality}")
+
+        listings = []
+        for item in dataset_items:
+            listing = self._apify_item_to_listing(item, it_name, de_name)
+            if listing:
+                text_to_check = f"{listing.title} {listing.description}"
+                red_flags = detect_red_flags(text_to_check, self.config)
+                if not red_flags:
+                    listings.append(listing)
+                else:
+                    logger.info(f"Skipping {listing.url} due to red flags: {red_flags}")
+
+        logger.info(f"Apify: {len(listings)} valid listings for {municipality}")
+        return listings
+
+    def _apify_item_to_listing(
+        self, item: dict, municipality_it: str, municipality_de: str
+    ) -> Optional[PropertyListing]:
+        """Convert Apify actor output item to PropertyListing."""
+        try:
+            # The azzouzana actor returns rich, normalized fields
+            description = item.get("description", "")
+            condition, condition_de = detect_condition(description)
+
+            # Extract URL - actor provides direct listing URLs
+            url = item.get("url", item.get("link", ""))
+            if not url:
+                prop_id = item.get("id", item.get("propertyId", ""))
+                if prop_id:
+                    url = f"{self.BASE_URL}/annunci/{prop_id}/"
+
+            # Extract property ID from URL
+            property_id = str(item.get("id", item.get("propertyId", "")))
+            if not property_id and url:
+                id_match = re.search(r"/annunci/(\d+)", url)
+                if id_match:
+                    property_id = id_match.group(1)
+
+            # Price extraction
+            price = float(item.get("price", item.get("priceValue", 0)))
+
+            # Surface area
+            surface = float(item.get("surface", item.get("surfaceValue", item.get("size", 0))))
+
+            # Price per sqm
+            price_per_sqm = float(item.get("pricePerSquareMeter", 0))
+            if not price_per_sqm and price and surface:
+                price_per_sqm = price / surface
+
+            listing = PropertyListing(
+                property_id=property_id,
+                source="immobiliare",
+                url=url,
+                title=item.get("title", ""),
+                description=description,
+                price=price,
+                price_per_sqm=price_per_sqm,
+                surface_area=surface,
+                rooms=int(item.get("rooms", item.get("locali", 0))),
+                bathrooms=int(item.get("bathrooms", item.get("bagni", 0))),
+                floor=item.get("floor", item.get("piano")),
+                elevator=item.get("hasLift", item.get("elevator", item.get("ascensore"))),
+                balcony=item.get("balcony", item.get("balcone")),
+                terrace=item.get("terrace", item.get("terrazza")),
+                garden=item.get("garden", item.get("giardino")),
+                garage=item.get("garage", item.get("box")),
+                cellar=item.get("cellar", item.get("cantina")),
+                energy_class=str(item.get("energyClass", item.get("classeEnergetica", ""))).upper(),
+                heating_type=item.get("heatingType", item.get("riscaldamento", "")),
+                year_built=item.get("yearBuilt", item.get("annoCostruzione")),
+                condition=condition,
+                condition_de=condition_de,
+                latitude=item.get("latitude", item.get("lat")),
+                longitude=item.get("longitude", item.get("lng", item.get("lon"))),
+                address=item.get("address", item.get("indirizzo", "")),
+                municipality=municipality_it,
+                municipality_de=municipality_de,
+                zone=item.get("zone", item.get("microzone", item.get("neighborhood", ""))),
+                images=item.get("images", item.get("photos", [])),
+                floor_plan_images=item.get("floorPlanImages", item.get("planimetrie", [])),
+                agency_name=item.get("agencyName", item.get("agency", {}).get("name", "")),
+                agency_phone=item.get("agencyPhone", item.get("agency", {}).get("phone", "")),
+                listing_date=item.get("publishDate", item.get("creationDate", "")),
+                last_updated=item.get("modificationDate", ""),
+                property_type=item.get("propertyType", item.get("typology", "appartamento")),
+                raw_data=item,
+            )
+            return listing
+        except Exception as e:
+            logger.warning(f"Error converting Apify item: {e}")
+            return None
 
     def build_search_url(self, municipality: str, page: int = 1) -> str:
         """Build immobiliare.it search URL for a given municipality."""
@@ -400,8 +542,16 @@ class ImmobiliareScraper:
         return details
 
     def scrape_municipality(self, municipality: str) -> list[PropertyListing]:
-        """Scrape all listings for a given municipality."""
+        """Scrape all listings for a given municipality. Tries Apify first, then direct."""
         logger.info(f"Starting scrape for municipality: {municipality}")
+
+        # Try Apify first if configured
+        if self.use_apify:
+            listings = self.scrape_via_apify(municipality)
+            if listings:
+                return listings
+            logger.info("Apify returned no results, falling back to direct scraping")
+
         it_name, de_name = normalize_municipality(municipality)
 
         all_summaries = []
