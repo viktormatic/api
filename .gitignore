@@ -1,2 +1,4 @@
 /node_modules
 apiary.html
+__pycache__/
+*.pyc
