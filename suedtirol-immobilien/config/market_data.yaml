@@ -1,0 +1,207 @@
+# Südtirol Immobilien Market Data
+# Sources: immobiliare.it Insights, Paregger+Partner, SMV Immobilienspiegel
+# Last updated: 2025/2026
+
+market_prices_per_sqm:
+  bozen:
+    zentrum_rentsch:
+      neubau: [6000, 8000]
+      gut_renoviert: [4500, 6000]
+      renovierungsbeduerftig: [3200, 4500]
+    gries_quirein:
+      neubau: [5500, 7500]
+      gut_renoviert: [4200, 5500]
+      renovierungsbeduerftig: [3000, 4200]
+    oberau_haslach:
+      neubau: [4500, 6000]
+      gut_renoviert: [3500, 4500]
+      renovierungsbeduerftig: [2800, 3500]
+    europa_neustift:
+      neubau: [4800, 6500]
+      gut_renoviert: [3800, 4800]
+      renovierungsbeduerftig: [2900, 3800]
+    don_bosco:
+      neubau: [4500, 5800]
+      gut_renoviert: [3500, 4500]
+      renovierungsbeduerftig: [2700, 3500]
+    durchschnitt: 4939
+
+  meran:
+    obermais:
+      neubau: [5000, 9000]
+      gut_renoviert: [4400, 5500]
+      renovierungsbeduerftig: [3500, 4400]
+    untermais:
+      neubau: [4200, 5500]
+      gut_renoviert: [3500, 4200]
+      renovierungsbeduerftig: [2800, 3500]
+    sinich:
+      neubau: [3500, 4500]
+      gut_renoviert: [2800, 3500]
+      renovierungsbeduerftig: [2200, 2800]
+    zentrum:
+      neubau: [5500, 8000]
+      gut_renoviert: [4500, 5500]
+      renovierungsbeduerftig: [3500, 4500]
+    durchschnitt: 4500
+
+  brixen:
+    zentrum:
+      neubau: [4500, 6000]
+      gut_renoviert: [4000, 5000]
+      renovierungsbeduerftig: [3000, 4000]
+    milland:
+      neubau: [4000, 5000]
+      gut_renoviert: [3500, 4000]
+      renovierungsbeduerftig: [2800, 3500]
+    umgebung:
+      neubau: [3500, 4500]
+      gut_renoviert: [3000, 4000]
+      renovierungsbeduerftig: [2500, 3000]
+    durchschnitt: 4000
+
+  leifers:
+    durchschnitt: 3800
+    range: [3200, 4500]
+    zentrum:
+      gut_renoviert: [3500, 4200]
+      renovierungsbeduerftig: [2800, 3500]
+
+  eppan:
+    st_michael_st_pauls:
+      gut_renoviert: [4000, 5500]
+      renovierungsbeduerftig: [3000, 4000]
+    andere_fraktionen:
+      gut_renoviert: [3000, 4000]
+      renovierungsbeduerftig: [2500, 3000]
+    durchschnitt: 4000
+
+  lana:
+    durchschnitt: 3700
+    range: [3000, 4700]
+    zentrum:
+      gut_renoviert: [3500, 4500]
+      renovierungsbeduerftig: [2800, 3500]
+
+  bruneck:
+    durchschnitt: 3500
+    range: [2800, 4200]
+    zentrum:
+      gut_renoviert: [3200, 4200]
+      renovierungsbeduerftig: [2500, 3200]
+
+  # Value opportunity zones
+  neumarkt:
+    durchschnitt: 3000
+    range: [2500, 3500]
+    zentrum:
+      gut_renoviert: [2800, 3500]
+      renovierungsbeduerftig: [2200, 2800]
+
+  schlanders:
+    durchschnitt: 2700
+    range: [2100, 3300]
+    zentrum:
+      gut_renoviert: [2500, 3200]
+      renovierungsbeduerftig: [1800, 2500]
+
+  sterzing:
+    durchschnitt: 3100
+    range: [2300, 3800]
+    zentrum:
+      gut_renoviert: [2800, 3500]
+      renovierungsbeduerftig: [2000, 2800]
+
+  kaltern:
+    durchschnitt: 4200
+    range: [3500, 5000]
+
+  ritten:
+    durchschnitt: 3500
+    range: [2800, 4200]
+
+  dorf_tirol:
+    durchschnitt: 4000
+    range: [3300, 4800]
+
+  franzensfeste:
+    durchschnitt: 1900
+    range: [1600, 2200]
+
+# Province-wide averages
+provinz_bozen:
+  kauf_durchschnitt_sqm: 4777
+  miete_durchschnitt_sqm_monat: 15.64
+  trend_yoy: "+4.67%"
+  data_date: "2026-01"
+
+# Renovation costs reference (South Tyrol 2025/2026)
+renovation_costs_per_sqm:
+  leicht: [400, 700]       # Cosmetic: paint, floors, bathroom surfaces
+  mittel: [700, 1200]      # Bath/kitchen new, partial electrics, windows
+  schwer: [1200, 2000]     # Complete renovation incl. building services
+  luxus: [2000, 3500]      # High-end finish
+
+  # Specific items
+  specific:
+    badezimmer_neu: [8000, 18000]
+    kueche_neu: [5000, 25000]
+    neue_trennwaende_pro_sqm: [80, 150]
+    neue_tueren_pro_stueck: [800, 2500]
+    neue_installationen_je_einheit: [5000, 12000]
+    baugenehmigung_teilung: [3000, 8000]
+    fenster_pro_stueck: [800, 2000]
+    fussboden_pro_sqm: [40, 120]
+    malerarbeiten_pro_sqm: [15, 35]
+    elektrik_komplett_pro_sqm: [80, 150]
+    heizung_neu_pro_sqm: [60, 120]
+
+# Purchase costs (Italy)
+purchase_costs:
+  grunderwerbsteuer_erstwohnung: 0.02      # 2% on cadastral value
+  grunderwerbsteuer_zweitwohnung: 0.09     # 9% on cadastral value
+  notar: [2000, 4000]
+  makler_pct: 0.03                          # 3% + VAT on purchase price
+  makler_mwst: 0.22                         # 22% VAT on broker fee
+  kataster_umschreibung: 300
+  hypothekensteuer: 50                      # Fixed for prima casa
+  katastersteuer: 50                        # Fixed for prima casa
+
+# Selling costs
+selling_costs:
+  makler_pct: 0.03
+  makler_mwst: 0.22
+  energieausweis: [200, 400]
+  # Capital gains tax: exempt after 5 years of ownership
+  # Within 5 years: taxed as income or 26% flat rate (substitute tax)
+  plusvalenza_flat_rate: 0.26
+
+# Splitting scenarios reference
+splitting_scenarios:
+  scenario_a:
+    description: "Large old apartment in Bozen center"
+    input: "Altbau 130m², 5 rooms, 1 bath, Zentrum Bozen"
+    strategy: "Split into 2-room (55m²) + 3-room (70m²), add second bathroom"
+    cost_estimate: 40000
+    value_before: 520000
+    value_after: 625000
+    gross_profit: 105000
+
+  scenario_b:
+    description: "Detached house near Meran"
+    input: "Detached 220m², 2 floors, garden, Obermais Meran"
+    strategy: "Ground floor + upper floor as separate apartments"
+    cost_estimate: 65000
+    value_before: 880000
+    value_after: 1050000
+    gross_profit: 170000
+
+  scenario_c:
+    description: "Renovation object in Neumarkt"
+    input: "To renovate 100m², 4 rooms, 1 bath, Neumarkt"
+    strategy: "Full renovation + split into 2x 2-room apartments"
+    cost_estimate: 120000
+    value_before: 250000
+    value_after: 350000
+    gross_profit: -20000
+    note: "Only profitable if purchase price < 200,000€"

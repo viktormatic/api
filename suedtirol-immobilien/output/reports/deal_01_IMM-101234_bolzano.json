@@ -1,0 +1,296 @@
+{
+  "report_date": "2026-02-14T18:45:44.476130",
+  "listing": {
+    "property_id": "IMM-101234",
+    "source": "immobiliare",
+    "url": "https://www.immobiliare.it/annunci/101234/",
+    "title": "Ampio appartamento da ristrutturare - Gries/Bozen",
+    "description": "Großzügige 5-Zimmer-Wohnung im Stadtteil Gries, zu renovieren. Ideale Raumaufteilung mit 2 Bädern, großer Wohnküche und Südbalkon. Keller und Garagenstellplatz. Energieklasse G. Baujahr 1975. Geeignet auch für Aufteilung in zwei separate Wohneinheiten.",
+    "price": 380000,
+    "price_per_sqm": 2814.81,
+    "price_history": [],
+    "surface_area": 135,
+    "rooms": 5,
+    "bathrooms": 2,
+    "floor": 2,
+    "total_floors": 4,
+    "elevator": true,
+    "balcony": true,
+    "terrace": null,
+    "garden": null,
+    "garage": true,
+    "cellar": true,
+    "energy_class": "G",
+    "heating_type": "centralizzato",
+    "year_built": 1975,
+    "condition": "da_ristrutturare",
+    "condition_de": "renovierungsbedürftig",
+    "latitude": 46.4963,
+    "longitude": 11.34,
+    "address": "Via Duca d'Aosta 48, Gries",
+    "municipality": "bolzano",
+    "municipality_de": "Bozen",
+    "zone": "gries_quirein",
+    "province": "BZ",
+    "images": [],
+    "floor_plan_images": [],
+    "agency_name": "Immobiliare Gasser",
+    "agency_phone": "+39 0471 123456",
+    "listing_date": "2025-10-15",
+    "last_updated": "",
+    "scrape_date": "2026-02-14T18:45:36.174447",
+    "property_type": "appartamento",
+    "raw_data": {}
+  },
+  "deal_analysis": {
+    "total_score": 77,
+    "deal_grade": "B",
+    "deal_label": "B-DEAL: Genauer prüfen",
+    "components": {
+      "price_discount": {
+        "score": 80,
+        "weight": 0.3
+      },
+      "location": {
+        "score": 100,
+        "weight": 0.25
+      },
+      "roi": {
+        "score": 40,
+        "weight": 0.25
+      },
+      "splitting": {
+        "score": 95,
+        "weight": 0.1
+      },
+      "liquidity": {
+        "score": 85,
+        "weight": 0.1
+      }
+    },
+    "recommendation": "Interessantes Objekt mit Potenzial. Discount: 22%, ROI: 10%. Detailprüfung und Preisverhandlung empfohlen.",
+    "action_items": [
+      "Besichtigung terminieren",
+      "Detaillierte Renovierungskosten-Schätzung erstellen",
+      "Vergleichsobjekte in der Umgebung analysieren",
+      "Preisverhandlung anstreben (Zielpreis: €349,600)",
+      "Teilungspotenzial prüfen: Mehrwert ca. €134,185"
+    ],
+    "risks": [
+      "Schlechte Energieklasse - zukünftige Auflagen möglich",
+      "Wohnungsteilung erfordert Baugenehmigung - Verzögerungen möglich"
+    ],
+    "valuation": {
+      "discount_to_market_pct": 21.8,
+      "roi_pct": 10.0,
+      "net_profit": 54888.03,
+      "arv_total": 654750.0,
+      "total_investment": 547788.0,
+      "location_score": 9.2,
+      "renovation_level": "mittel"
+    },
+    "splitting_analysis": {
+      "is_splittable": true,
+      "confidence": 0.95,
+      "n_units": 2,
+      "proposed_units": [
+        {
+          "unit": 1,
+          "area": 68.3,
+          "rooms": 2,
+          "has_bathroom": true,
+          "has_kitchen": true
+        },
+        {
+          "unit": 2,
+          "area": 55.9,
+          "rooms": 2,
+          "has_bathroom": true,
+          "has_kitchen": true
+        }
+      ],
+      "unit_areas": [
+        68.3,
+        55.9
+      ],
+      "checks": {
+        "min_area_met": true,
+        "separate_bathrooms": true,
+        "natural_light": true,
+        "separate_access": true,
+        "ventilation": true,
+        "min_height": true
+      },
+      "structural": {
+        "load_bearing_walls": false,
+        "plumbing": "",
+        "windows": 7,
+        "window_distribution": "Sufficient for all units"
+      },
+      "economics": {
+        "value_before": 486000.0,
+        "value_after": 650559.6,
+        "splitting_cost": 30375.0,
+        "net_value_add": 134184.6
+      },
+      "splitting_score": 95
+    },
+    "renovation_plan": {
+      "level": "schwer",
+      "items": [
+        {
+          "name": "Complete electrical rewiring",
+          "name_de": "Elektrik komplett",
+          "description": "",
+          "quantity": 135,
+          "unit": "m²",
+          "cost_estimate": 15525.0,
+          "cost_range": [
+            10800,
+            20250
+          ]
+        },
+        {
+          "name": "Complete heating system",
+          "name_de": "Heizung komplett",
+          "description": "",
+          "quantity": 135,
+          "unit": "m²",
+          "cost_estimate": 12150.0,
+          "cost_range": [
+            8100,
+            16200
+          ]
+        },
+        {
+          "name": "Flooring",
+          "name_de": "Fußbodenbeläge",
+          "description": "",
+          "quantity": 135,
+          "unit": "m²",
+          "cost_estimate": 10800.0,
+          "cost_range": [
+            5400,
+            16200
+          ]
+        },
+        {
+          "name": "Painting & plastering",
+          "name_de": "Maler- und Verputzarbeiten",
+          "description": "",
+          "quantity": 135,
+          "unit": "m²",
+          "cost_estimate": 5062.5,
+          "cost_range": [
+            3037.5,
+            7087.5
+          ]
+        },
+        {
+          "name": "Bathroom - complete new",
+          "name_de": "Badezimmer komplett neu",
+          "description": "",
+          "quantity": 1,
+          "unit": "Stück",
+          "cost_estimate": 13000.0,
+          "cost_range": [
+            8000,
+            18000
+          ]
+        },
+        {
+          "name": "Window replacement",
+          "name_de": "Fenstertausch",
+          "description": "",
+          "quantity": 8,
+          "unit": "Stück",
+          "cost_estimate": 11200.0,
+          "cost_range": [
+            6400,
+            16000
+          ]
+        },
+        {
+          "name": "Interior doors",
+          "name_de": "Innentüren",
+          "description": "",
+          "quantity": 5,
+          "unit": "Stück",
+          "cost_estimate": 8250.0,
+          "cost_range": [
+            4000,
+            12500
+          ]
+        },
+        {
+          "name": "New kitchen",
+          "name_de": "Neue Küche",
+          "description": "",
+          "quantity": 1,
+          "unit": "Stück",
+          "cost_estimate": 15000.0,
+          "cost_range": [
+            5000,
+            25000
+          ]
+        },
+        {
+          "name": "Building permit for splitting",
+          "name_de": "Baugenehmigung Teilung",
+          "description": "",
+          "quantity": 1,
+          "unit": "Stück",
+          "cost_estimate": 5500.0,
+          "cost_range": [
+            3000,
+            8000
+          ]
+        },
+        {
+          "name": "Partition walls",
+          "name_de": "Trennwände",
+          "description": "New partition walls for 2 units",
+          "quantity": 15,
+          "unit": "m²",
+          "cost_estimate": 1725.0,
+          "cost_range": [
+            1200,
+            2250
+          ]
+        },
+        {
+          "name": "Entrance doors",
+          "name_de": "Eingangstüren",
+          "description": "",
+          "quantity": 1,
+          "unit": "Stück",
+          "cost_estimate": 2500.0,
+          "cost_range": [
+            1500,
+            3500
+          ]
+        },
+        {
+          "name": "Separate utility connections",
+          "name_de": "Separate Versorgungsanschlüsse",
+          "description": "Electricity, water, gas meters per unit",
+          "quantity": 1,
+          "unit": "Stück",
+          "cost_estimate": 3500.0,
+          "cost_range": [
+            2000,
+            5000
+          ]
+        }
+      ],
+      "subtotal": 104212.5,
+      "contingency_pct": 0.15,
+      "contingency": 15631.88,
+      "total_estimate": 119844.38,
+      "total_range": [
+        58437.5,
+        172485.62
+      ]
+    }
+  }
+}
